@@ -1,0 +1,1214 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>📋 كشف زيارات افتقاد القس/ سيرابيون عزت كاهن بكاتدرائية الشهيد العظيم ابوفام بطما</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    body {
+      background-color: #f8f9fa;
+    }
+
+    .container {
+      max-width: 900px;
+    }
+
+    .week-range {
+      background: #fff3cd;
+      padding: 10px;
+      border-radius: 8px;
+      margin-top: 10px;
+    }
+
+    .required-star {
+      color: red;
+      margin-right: 4px;
+    }
+
+    #otherServiceInput {
+      border: 2px dashed #28a745;
+      background-color: #e8f9ee;
+      transition: 0.3s ease;
+    }
+
+    #otherServiceInput:focus {
+      border-color: #218838;
+      background-color: #d4f5de;
+      box-shadow: 0 0 6px rgba(33, 136, 56, 0.4);
+    }
+
+    /* ✅ إخفاء الأيقونات داخل PDF */
+    /* ✅ إخفاء الأيقونات فقط داخل PDF — مع بقاء العمود نفسه */
+    /* 🌟 تنسيق أيقونة الحذف */
+    .delete-icon {
+      cursor: pointer;
+      color: #dc3545;
+      font-size: 18px;
+      transition: 0.2s ease;
+    }
+
+    .delete-icon:hover {
+      color: #a71d2a;
+      transform: scale(1.2);
+    }
+
+    /* ✅ إخفاء عمود الحذف بالكامل في PDF */
+    @media print {
+
+      th.no-print,
+      td.no-print {
+        display: none !important;
+      }
+    }
+  </style>
+
+  <style>
+    :root {
+      --brand: #236653;
+      --brand-dark: #174b3f;
+      --brand-soft: #eaf3ef;
+      --gold: #c59a50;
+      --ink: #26352f;
+      --muted: #75827c;
+      --line: #e5ebe7;
+      --surface: #ffffff;
+      --page: #f3f6f4;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      background:
+        radial-gradient(circle at top right, rgba(197, 154, 80, .10), transparent 27rem),
+        var(--page);
+      color: var(--ink);
+      font-family: "Segoe UI", Tahoma, Arial, sans-serif;
+      line-height: 1.7;
+      min-height: 100vh;
+    }
+
+    .container {
+      max-width: 1000px;
+    }
+
+    .page-header {
+      position: relative;
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      overflow: hidden;
+      padding: 27px 30px;
+      color: #fff;
+      border-radius: 20px;
+      background: linear-gradient(120deg, var(--brand-dark), var(--brand) 72%, #397b64);
+      box-shadow: 0 12px 30px rgba(23, 75, 63, .15);
+    }
+
+    .page-header::after {
+      content: "";
+      position: absolute;
+      left: -35px;
+      bottom: -85px;
+      width: 220px;
+      height: 220px;
+      border: 1px solid rgba(255, 255, 255, .13);
+      border-radius: 50%;
+      box-shadow: 0 0 0 22px rgba(255, 255, 255, .035), 0 0 0 45px rgba(255, 255, 255, .025);
+    }
+
+    .header-mark {
+      display: grid;
+      place-items: center;
+      flex: 0 0 54px;
+      width: 54px;
+      height: 54px;
+      color: #f4dcae;
+      font-size: 27px;
+      border: 1px solid rgba(244, 220, 174, .45);
+      border-radius: 16px;
+      background: rgba(255, 255, 255, .08);
+    }
+
+    .header-eyebrow {
+      margin-bottom: 3px;
+      color: #e8d4ad;
+      font-size: .82rem;
+      font-weight: 600;
+      letter-spacing: .04em;
+    }
+
+    .page-header h2 {
+      position: relative;
+      z-index: 1;
+      font-size: clamp(1.15rem, 3vw, 1.65rem);
+      font-weight: 750;
+      line-height: 1.5;
+    }
+
+    .header-subtitle {
+      color: rgba(255, 255, 255, .78);
+      font-size: .92rem;
+    }
+
+    .card {
+      border: 1px solid rgba(35, 102, 83, .07);
+      border-radius: 17px;
+      background: var(--surface);
+      box-shadow: 0 5px 22px rgba(36, 65, 52, .055);
+    }
+
+    .card-body {
+      padding: 24px;
+    }
+
+    .card-title {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 20px;
+      color: var(--brand-dark);
+      font-size: 1.12rem;
+      font-weight: 750;
+    }
+
+    #weekSelector .card-title::before,
+    #visitFormCard .card-title::before {
+      content: "";
+      width: 4px;
+      height: 23px;
+      border-radius: 5px;
+      background: var(--gold);
+    }
+
+    .form-label {
+      margin-bottom: 7px;
+      color: #40534a;
+      font-size: .92rem;
+      font-weight: 650;
+    }
+
+    .form-control,
+    .form-select {
+      min-height: 46px;
+      padding: 10px 13px;
+      color: var(--ink);
+      border: 1px solid #dce5df;
+      border-radius: 10px;
+      background-color: #fbfcfb;
+      transition: border-color .2s, box-shadow .2s, background .2s;
+    }
+
+    textarea.form-control {
+      min-height: 88px;
+    }
+
+    .form-control:focus,
+    .form-select:focus {
+      border-color: #78a895;
+      background: #fff;
+      box-shadow: 0 0 0 3px rgba(35, 102, 83, .11);
+    }
+
+    .required-star {
+      color: #c65b50;
+      margin-right: 3px;
+    }
+
+    .week-range {
+      padding: 12px 16px;
+      color: var(--brand-dark);
+      border: 1px solid #dcebe3;
+      border-radius: 10px;
+      background: var(--brand-soft);
+      font-size: .94rem;
+    }
+
+    #otherServiceInput {
+      border: 1px dashed #78a895;
+      background: #f1f8f4;
+    }
+
+    .btn {
+      min-height: 42px;
+      padding: 9px 17px;
+      border-radius: 10px;
+      font-weight: 650;
+      transition: transform .18s, box-shadow .18s, background .18s;
+    }
+
+    .btn:hover {
+      transform: translateY(-1px);
+    }
+
+    .btn-success {
+      border-color: var(--brand);
+      background: var(--brand);
+      box-shadow: 0 4px 10px rgba(35, 102, 83, .14);
+    }
+
+    .btn-success:hover {
+      border-color: var(--brand-dark);
+      background: var(--brand-dark);
+    }
+
+    .btn-outline-success {
+      color: var(--brand);
+      border-color: #9bbcaf;
+    }
+
+    .btn-outline-success:hover {
+      color: #fff;
+      border-color: var(--brand);
+      background: var(--brand);
+    }
+
+    .btn-outline-danger {
+      border-radius: 10px;
+    }
+
+    button:disabled {
+      cursor: not-allowed;
+      box-shadow: none;
+      opacity: .55;
+      transform: none !important;
+    }
+
+    #reportCard .card-title {
+      display: block;
+      padding-bottom: 14px;
+      border-bottom: 1px solid var(--line);
+      line-height: 1.7;
+    }
+
+    .table-responsive {
+      overflow-x: auto;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+    }
+
+    #reportTable {
+      min-width: 760px;
+      margin-bottom: 0;
+      vertical-align: middle;
+    }
+
+    #reportTable thead th {
+      padding: 13px 11px;
+      color: var(--brand-dark);
+      border-bottom: 1px solid #dce7e0;
+      background: #edf4f0;
+      font-size: .9rem;
+      font-weight: 750;
+      white-space: nowrap;
+    }
+
+    #reportTable tbody td {
+      padding: 12px 11px;
+      color: #425149;
+      border-color: #edf1ee;
+      font-size: .9rem;
+    }
+
+    #reportTable tbody tr:nth-child(even) {
+      background: #fafcfb;
+    }
+
+    #reportTable tbody tr:hover {
+      background: #f0f7f3;
+    }
+
+    .delete-icon {
+      display: inline-grid;
+      place-items: center;
+      width: 32px;
+      height: 32px;
+      color: #c6534b;
+      border-radius: 9px;
+      background: #fff1ef;
+      font-size: 15px;
+      transition: .2s ease;
+    }
+
+    .delete-icon:hover {
+      color: #fff;
+      background: #c6534b;
+      transform: scale(1.05);
+    }
+
+    .alert-success {
+      border: 1px solid #cfe5d8;
+      border-radius: 10px;
+      color: #245b42;
+      background: #eff8f2;
+    }
+
+    /* Custom Popup */
+    .custom-modal .modal-content {
+      border: none;
+      border-radius: 20px;
+      overflow: hidden;
+      box-shadow: 0 15px 50px rgba(0, 0, 0, .15);
+    }
+
+    .custom-modal .modal-body {
+      padding: 35px 25px 25px;
+      text-align: center;
+    }
+
+    .popup-icon {
+      width: 75px;
+      height: 75px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 18px;
+      border-radius: 50%;
+      font-size: 34px;
+    }
+
+    .popup-icon.success {
+      background: #e8f5ed;
+      color: #236653;
+    }
+
+    .popup-icon.warning {
+      background: #fff5df;
+      color: #c59a50;
+    }
+
+    .popup-icon.danger {
+      background: #fff0ee;
+      color: #dc3545;
+    }
+
+    .popup-icon.info {
+      background: #edf3f9;
+      color: #397b9e;
+    }
+
+    .popup-title {
+      color: var(--brand-dark);
+      font-size: 1.3rem;
+      font-weight: 750;
+      margin-bottom: 10px;
+    }
+
+    .popup-message {
+      color: #75827c;
+      font-size: .96rem;
+      line-height: 1.8;
+      margin-bottom: 25px;
+    }
+
+    .popup-btn {
+      min-width: 115px;
+      border: none;
+      border-radius: 10px;
+      padding: 10px 22px;
+      font-weight: 650;
+    }
+
+    .popup-btn.primary {
+      background: var(--brand);
+      color: white;
+    }
+
+    .popup-btn.primary:hover {
+      background: var(--brand-dark);
+    }
+
+    .popup-btn.cancel {
+      background: #f1f3f2;
+      color: #526159;
+    }
+
+    .custom-modal .modal-dialog {
+      max-width: 420px;
+    }
+
+    @media (max-width: 576px) {
+      .custom-modal .modal-dialog {
+        margin: 15px;
+      }
+    }
+
+    @media (max-width: 576px) {
+      body {
+        padding: 12px !important;
+      }
+
+      .page-header {
+        gap: 12px;
+        padding: 20px 17px;
+        border-radius: 15px;
+      }
+
+      .header-mark {
+        flex-basis: 43px;
+        width: 43px;
+        height: 43px;
+        font-size: 22px;
+      }
+
+      .page-header h2 {
+        font-size: 1.08rem;
+      }
+
+      .header-subtitle {
+        font-size: .82rem;
+      }
+
+      .card-body {
+        padding: 17px;
+      }
+
+      .card-title {
+        font-size: 1.02rem;
+      }
+
+      #reportCard .d-flex {
+        justify-content: flex-start !important;
+      }
+
+      #reportCard .d-flex .btn {
+        flex: 1 1 auto;
+      }
+    }
+
+    @media print {
+      body {
+        background: #fff !important;
+      }
+
+      .card {
+        box-shadow: none;
+      }
+
+      .page-header {
+        color: #fff !important;
+        print-color-adjust: exact;
+      }
+    }
+  </style>
+
+</head>
+
+<body class="p-3">
+  <div class="container">
+    <header class="page-header mb-4">
+      <div class="header-mark">✦</div>
+      <div>
+        <div class="header-eyebrow">سجل المتابعة والافتقاد</div>
+        <h2 class="mb-0">كشف زيارات افتقاد القس/ سيرابيون عزت</h2>
+        <p class="header-subtitle mb-0">كاتدرائية الشهيد العظيم ابوفام بطما</p>
+      </div>
+    </header>
+
+    <!-- تحديد الأسبوع -->
+    <div id="weekSelector" class="card mb-3">
+      <div class="card-body">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+          <h5 class="card-title">تحديد التاريخ</h5>
+          <div>
+            <button id="toggleReport" class="btn btn-outline-success">عرض التقرير</button>
+          </div>
+        </div>
+        <div class="row g-3 align-items-end">
+          <div class="col-md-6">
+            <label class="form-label">تاريخ بداية <span class="required-star">*</span></label>
+            <input type="date" id="weekStart" class="form-control" required>
+          </div>
+          <div class="col-md-6">
+            <label class="form-label">تاريخ نهاية <span class="required-star">*</span></label>
+            <input type="date" id="weekEnd" class="form-control" required>
+          </div>
+        </div>
+        <div id="weekInfo" class="week-range mt-3 d-none text-center fw-bold"></div>
+      </div>
+    </div>
+
+    <!-- نموذج إضافة زيارة -->
+    <div id="visitFormCard" class="card mb-3">
+      <div class="card-body">
+        <h5 class="card-title">إضافة زيارة جديدة</h5>
+        <form id="visitForm" novalidate>
+          <div class="row g-3">
+            <div class="col-md-6">
+              <label class="form-label">اليوم <span class="required-star">*</span></label>
+              <input type="date" id="visitDate" class="form-control" required>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">نوع الخدمة <span class="required-star">*</span></label>
+              <select id="serviceType" class="form-select mb-2" required>
+                <option value="" disabled selected>اختر نوع الخدمة</option>
+                <option value="اعدادى">اعدادى</option>
+                <option value="ثانوى">ثانوى</option>
+                <option value="أخرى">أخرى</option>
+              </select>
+
+              <!-- الحقل الإضافي المخفي -->
+              <input type="text" id="otherServiceInput" class="form-control mt-2 d-none"
+                placeholder="✏️ اكتب نوع الخدمة هنا">
+
+
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">الاسم <span class="required-star">*</span></label>
+              <input type="text" id="familyNames" class="form-control" required>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">رقم التليفون <span class="required-star">*</span></label>
+              <input type="tel" id="phoneNumber" class="form-control" pattern="^[0-9]{11}$" maxlength="11"
+                oninput="this.value = this.value.replace(/[^0-9]/g, '')" required style="text-align: right;">
+            </div>
+            <div class="col-md-12">
+              <label class="form-label">العنوان <span class="required-star">*</span></label>
+              <input type="text" id="address" class="form-control" required>
+            </div>
+            <div class="col-md-12">
+              <label class="form-label">ملاحظات </label>
+              <textarea id="notes" class="form-control" rows="2"></textarea>
+            </div>
+          </div>
+          <button type="submit" class="btn btn-success mt-3" id="addVisit" disabled>إضافة الزيارة</button>
+        </form>
+        <div id="successMessage" class="alert alert-success mt-3 d-none text-center">
+          ✅ تمت إضافة الزيارة بنجاح
+        </div>
+      </div>
+    </div>
+
+    <!-- عرض التقرير -->
+    <div id="reportCard" class="card mb-3" style="display:none;">
+      <div class="card-body">
+        <div class="mb-3">
+          <h5 class="card-title mb-2 w-100 text-end" style="white-space: normal; line-height: 1.6; font-weight: bold;">
+            كشف زيارات افتقاد القس/ سيرابيون عزت كاهن بكاتدرائية الشهيد العظيم ابوفام بطما
+          </h5>
+
+          <div class="d-flex flex-wrap justify-content-end gap-2">
+            <button id="downloadPdf" class="btn btn-outline-success">تحميل PDF</button>
+          </div>
+        </div>
+
+        <!-- فلتر نوع الخدمة داخل التقرير -->
+        <div class="row mb-3 align-items-center">
+          <div class="col-md-4">
+            <select id="filterServiceType" class="form-select">
+              <option value="all">كل الخدمات</option>
+              <option value="اعدادى">اعدادى</option>
+              <option value="ثانوى">ثانوى</option>
+              <option value="other">أخرى</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="table-responsive">
+          <table class="table table-bordered table-striped" id="reportTable">
+            <thead class="table-light">
+              <tr>
+                <th>اليوم</th>
+                <th>نوع الخدمة</th>
+                <th>الاسم</th>
+                <th>رقم التليفون</th>
+                <th>العنوان</th>
+                <th>ملاحظات</th>
+                <th class="no-print">حذف</th> <!-- نسيبه كده، الكلاس no-print هو اللي هيخفيه -->
+              </tr>
+            </thead>
+            <tbody id="reportBody"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+  </div>
+  <!-- Custom Popup -->
+  <div class="modal fade custom-modal" id="customPopup" tabindex="-1" aria-hidden="true">
+
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+
+        <div class="modal-body">
+
+          <div class="popup-icon success" id="popupIcon">
+            ✓
+          </div>
+
+          <h5 class="popup-title" id="popupTitle">
+            تمت العملية بنجاح
+          </h5>
+
+          <p class="popup-message" id="popupMessage">
+            تم تنفيذ العملية بنجاح.
+          </p>
+
+          <div class="d-flex justify-content-center gap-2">
+
+            <button type="button" class="popup-btn cancel d-none" id="popupCancel">
+              إلغاء
+            </button>
+
+            <button type="button" class="popup-btn primary" id="popupConfirm">
+              حسنًا
+            </button>
+
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- مكتبات PDF -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+
+  <script type="module">
+    import {
+      db,
+      auth,
+      collection,
+      addDoc,
+      deleteDoc,
+      doc,
+      onSnapshot,
+      serverTimestamp,
+      onAuthStateChanged
+    } from "./firebase.js";
+
+    // =========================
+    // حماية الصفحة بتسجيل الدخول
+    // =========================
+    let appStarted = false;
+
+    onAuthStateChanged(auth, (user) => {
+
+      if (!user) {
+        window.location.replace("./login.html");
+        return;
+      }
+
+      if (appStarted) return;
+
+      appStarted = true;
+      startApp();
+
+    });
+
+    // =========================
+    // تشغيل الموقع بعد تسجيل الدخول
+    // =========================
+    function startApp() {
+
+      const weekStartInput = document.getElementById('weekStart');
+      const weekEndInput = document.getElementById('weekEnd');
+      const weekInfo = document.getElementById('weekInfo');
+
+      const visitForm = document.getElementById('visitForm');
+      const addVisitBtn = document.getElementById('addVisit');
+
+      const toggleReportBtn = document.getElementById('toggleReport');
+      const reportCard = document.getElementById('reportCard');
+      const visitFormCard = document.getElementById('visitFormCard');
+      const reportBody = document.getElementById('reportBody');
+
+      const downloadBtn = document.getElementById('downloadPdf');
+
+      const serviceType = document.getElementById('serviceType');
+      const filterServiceType = document.getElementById('filterServiceType');
+      const otherServiceInput = document.getElementById('otherServiceInput');
+
+      const visitsCollection = collection(db, "visits");
+
+      let visitsData = [];
+
+
+      function saveVisitsLocally(visits) {
+        localStorage.setItem('visits', JSON.stringify(visits));
+      }
+      // =========================
+      // Custom Popup
+      // =========================
+      function showPopup(type, title, message, isConfirm = false) {
+        const modalElement = document.getElementById('customPopup');
+        const modal = bootstrap.Modal.getOrCreateInstance(modalElement);
+
+        const icon = document.getElementById('popupIcon');
+        const popupTitle = document.getElementById('popupTitle');
+        const popupMessage = document.getElementById('popupMessage');
+        const confirmBtn = document.getElementById('popupConfirm');
+        const cancelBtn = document.getElementById('popupCancel');
+
+        const icons = {
+          success: '✓',
+          warning: '⚠',
+          danger: '✕',
+          info: 'ℹ'
+        };
+
+        icon.className = `popup-icon ${type}`;
+        icon.textContent = icons[type] || 'ℹ';
+
+        popupTitle.textContent = title;
+        popupMessage.textContent = message;
+
+        cancelBtn.classList.toggle('d-none', !isConfirm);
+        confirmBtn.textContent = isConfirm ? 'تأكيد' : 'حسنًا';
+
+        return new Promise(resolve => {
+          let settled = false;
+
+          const finish = (result) => {
+            if (settled) return;
+
+            settled = true;
+            modalElement.removeEventListener('hidden.bs.modal', onHidden);
+            resolve(result);
+          };
+
+          const onHidden = () => finish(false);
+
+          modalElement.addEventListener('hidden.bs.modal', onHidden);
+
+          confirmBtn.onclick = () => {
+            finish(true);
+            modal.hide();
+          };
+
+          cancelBtn.onclick = () => {
+            finish(false);
+            modal.hide();
+          };
+
+          modal.show();
+        });
+      }
+
+      // =========================
+      // Local Storage
+      // =========================
+      function getAllVisits() {
+        return JSON.parse(localStorage.getItem('visits')) || [];
+      }
+      // =========================
+      // عرض الزيارات
+      // =========================
+      function loadVisits(start = null, end = null, selectedFilter = 'all') {
+
+        let filtered = [...visitsData];
+
+        if (start && end) {
+          filtered = filtered.filter(visit =>
+            visit.date >= start && visit.date <= end
+          );
+        }
+
+        if (selectedFilter !== 'all') {
+          filtered = filtered.filter(visit => {
+            const service = visit.serviceType || '';
+
+            if (selectedFilter === 'other') {
+              return service.startsWith('أخرى');
+            }
+
+            return service === selectedFilter;
+          });
+        }
+
+        filtered.sort((a, b) =>
+          (a.date || '').localeCompare(b.date || '')
+        );
+
+        reportBody.innerHTML = '';
+
+        if (filtered.length === 0) {
+          reportBody.innerHTML = `
+      <tr>
+        <td colspan="7" class="text-center text-muted py-4">
+          لا توجد زيارات مطابقة للبحث
+        </td>
+      </tr>
+    `;
+
+          downloadBtn.style.display = 'none';
+          return;
+        }
+
+        filtered.forEach(visit => {
+
+          const row = document.createElement('tr');
+
+          row.innerHTML = `
+      <td>${visit.date || ''}</td>
+      <td>${visit.serviceType || ''}</td>
+      <td>${visit.familyNames || ''}</td>
+      <td>${visit.phoneNumber || ''}</td>
+      <td>${visit.address || ''}</td>
+      <td>${visit.notes || ''}</td>
+
+      <td class="no-print text-center">
+        <span
+          class="delete-icon"
+          onclick="deleteSingleVisit('${visit.id}')"
+          title="حذف الزيارة">
+          🗑️
+        </span>
+      </td>
+    `;
+
+          reportBody.appendChild(row);
+        });
+
+        downloadBtn.style.display = 'inline-block';
+      }
+
+
+
+
+      filterServiceType.addEventListener('change', () => {
+
+        loadVisits(
+          weekStartInput.value,
+          weekEndInput.value,
+          filterServiceType.value
+        );
+
+      });
+
+      onSnapshot(visitsCollection, (snapshot) => {
+
+        visitsData = snapshot.docs.map(document => ({
+          id: document.id,
+          ...document.data()
+        }));
+
+        // تحديث النسخة المحلية
+        saveVisitsLocally(visitsData);
+
+        // تحديث التقرير
+        loadVisits(
+          weekStartInput.value,
+          weekEndInput.value,
+          filterServiceType.value
+        );
+
+      }, (error) => {
+
+        console.error("Firebase Read Error:", error);
+
+        showPopup(
+          'danger',
+          'خطأ في تحميل البيانات',
+          'تعذر تحميل الزيارات من Firebase.'
+        );
+
+      });
+
+      async function deleteSingleVisit(visitId) {
+
+        const confirmed = await showPopup(
+          'danger',
+          'حذف الزيارة',
+          'هل أنتِ متأكدة من حذف هذه الزيارة؟',
+          true
+        );
+
+        if (!confirmed) return;
+
+        try {
+
+          await deleteDoc(doc(db, "visits", visitId));
+
+          // تحديث LocalStorage بعد نجاح الحذف
+          visitsData = visitsData.filter(visit => visit.id !== visitId);
+
+          saveVisitsLocally(visitsData);
+
+          loadVisits(
+            weekStartInput.value,
+            weekEndInput.value,
+            filterServiceType.value
+          );
+
+          showPopup(
+            'success',
+            'تم الحذف',
+            'تم حذف الزيارة بنجاح.'
+          );
+
+        } catch (error) {
+
+          console.error("Firebase Delete Error:", error);
+
+          showPopup(
+            'danger',
+            'فشل الحذف',
+            'تعذر حذف الزيارة من Firebase. حاولي مرة أخرى.'
+          );
+        }
+      }
+
+      window.deleteSingleVisit = deleteSingleVisit;
+      // =========================
+      // حفظ وعرض فترة التاريخ
+      // =========================
+      function saveWeekAutomatically() {
+        const start = weekStartInput.value;
+        const end = weekEndInput.value;
+
+        if (start && end) {
+          if (start > end) {
+            weekInfo.classList.add('d-none');
+            return;
+          }
+
+          weekInfo.textContent = `التقرير من ${start} إلى ${end}`;
+          weekInfo.classList.remove('d-none');
+
+          loadVisits(start, end, filterServiceType.value);
+        }
+      }
+
+      weekStartInput.addEventListener('change', saveWeekAutomatically);
+      weekEndInput.addEventListener('change', saveWeekAutomatically);
+
+      // =========================
+      // التحقق من البيانات
+      // =========================
+      function updateAddButton() {
+        addVisitBtn.disabled = !visitForm.checkValidity();
+      }
+
+      visitForm.addEventListener('input', updateAddButton);
+      visitForm.addEventListener('change', updateAddButton);
+
+      // =========================
+      // نوع الخدمة (أخرى)
+      // =========================
+      serviceType.addEventListener('change', () => {
+        if (serviceType.value === 'أخرى') {
+          otherServiceInput.classList.remove('d-none');
+          otherServiceInput.required = true;
+        } else {
+          otherServiceInput.classList.add('d-none');
+          otherServiceInput.required = false;
+          otherServiceInput.value = '';
+        }
+
+        updateAddButton();
+      });
+
+      // =========================
+      // إضافة زيارة جديدة
+      // =========================
+      visitForm.addEventListener('submit', async (e) => {
+
+        e.preventDefault();
+
+        if (!visitForm.checkValidity()) {
+          visitForm.reportValidity();
+          return;
+        }
+
+        const selectedService =
+          serviceType.value === 'أخرى'
+            ? `أخرى (${otherServiceInput.value.trim()})`
+            : serviceType.value;
+
+        const visit = {
+          date: document.getElementById('visitDate').value,
+          serviceType: selectedService,
+          familyNames: document.getElementById('familyNames').value,
+          phoneNumber: document.getElementById('phoneNumber').value,
+          address: document.getElementById('address').value,
+          notes: document.getElementById('notes').value,
+          createdAt: serverTimestamp()
+        };
+
+        try {
+
+          // الحفظ في Firebase
+          const docRef = await addDoc(visitsCollection, visit);
+
+          // الحفظ في LocalStorage بنفس ID الخاص بـ Firebase
+          const localVisit = {
+            ...visit,
+            id: docRef.id,
+            createdAt: null
+          };
+
+          visitsData.push(localVisit);
+
+          saveVisitsLocally(visitsData);
+
+          visitForm.reset();
+
+          otherServiceInput.classList.add('d-none');
+          otherServiceInput.required = false;
+
+          addVisitBtn.disabled = true;
+
+          showPopup(
+            'success',
+            'تمت الإضافة بنجاح',
+            'تم تسجيل الزيارة بنجاح في سجل الافتقاد.'
+          );
+
+        } catch (error) {
+
+          console.error("Firebase Add Error:", error);
+
+          showPopup(
+            'danger',
+            'فشل حفظ الزيارة',
+            'تعذر حفظ الزيارة في قاعدة البيانات. حاولي مرة أخرى.'
+          );
+        }
+
+      });
+      // =========================
+      // عرض / إخفاء التقرير
+      // =========================
+      toggleReportBtn.addEventListener('click', () => {
+        const start = weekStartInput.value;
+        const end = weekEndInput.value;
+
+        const showingReport = reportCard.style.display === 'block';
+
+        if (showingReport) {
+          reportCard.style.display = 'none';
+          visitFormCard.style.display = 'block';
+
+          weekInfo.classList.add('d-none');
+          weekStartInput.value = '';
+          weekEndInput.value = '';
+          filterServiceType.value = 'all';
+          toggleReportBtn.textContent = 'عرض التقرير';
+        } else {
+          if (!start || !end) {
+            showPopup(
+              'warning',
+              'تنبيه',
+              'من فضلك اختاري تاريخ البداية وتاريخ النهاية أولاً.'
+            );
+            return;
+          }
+
+          if (start > end) {
+            showPopup(
+              'warning',
+              'فترة غير صحيحة',
+              'تاريخ البداية يجب أن يكون قبل تاريخ النهاية.'
+            );
+            return;
+          }
+
+          reportCard.style.display = 'block';
+          visitFormCard.style.display = 'none';
+
+          weekInfo.textContent = `التقرير من ${start} إلى ${end}`;
+          weekInfo.classList.remove('d-none');
+
+          toggleReportBtn.textContent = 'إخفاء التقرير';
+
+          loadVisits(start, end, filterServiceType.value);
+        }
+      });
+
+      // =========================
+      // تحميل PDF
+      // =========================
+      downloadBtn.addEventListener('click', async () => {
+        if (reportCard.style.display === 'none') {
+          showPopup(
+            'warning',
+            'لا يمكن تحميل التقرير',
+            'من فضلك اعرض التقرير أولاً.'
+          );
+          return;
+        }
+
+        downloadBtn.style.display = 'none';
+
+        const deleteCols = document.querySelectorAll(
+          'th.no-print, td.no-print'
+        );
+
+        deleteCols.forEach(col => col.style.display = 'none');
+
+        const cloned = reportCard.cloneNode(true);
+
+        // نقل قيمة الفلتر المختار إلى نسخة الـ PDF
+        const originalFilter = document.getElementById('filterServiceType');
+        const clonedFilter = cloned.querySelector('#filterServiceType');
+
+        clonedFilter.value = originalFilter.value;
+
+        const selectedOption = originalFilter.options[originalFilter.selectedIndex];
+
+        clonedFilter.outerHTML = `
+    <div class="form-control bg-white">
+        ${selectedOption.textContent}
+    </div>
+`;
+
+        cloned.style.width = '794px';
+        cloned.style.position = 'absolute';
+        cloned.style.left = '-9999px';
+
+        document.body.appendChild(cloned);
+
+        try {
+          const canvas = await html2canvas(cloned, {
+            scale: 2,
+            useCORS: true,
+            windowWidth: 794
+          });
+
+          const imgData = canvas.toDataURL('image/png');
+
+          const { jsPDF } = window.jspdf;
+          const pdf = new jsPDF('p', 'mm', 'a4');
+
+          const pageWidth = pdf.internal.pageSize.getWidth();
+          const imgProps = pdf.getImageProperties(imgData);
+
+          const pdfWidth = pageWidth - 20;
+          const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
+
+          pdf.addImage(imgData, 'PNG', 10, 10, pdfWidth, pdfHeight);
+
+          pdf.save('تقرير_الزيارات.pdf');
+
+        } catch (error) {
+          showPopup(
+            'warning',
+            'حدث خطأ',
+            'لم نتمكن من إنشاء ملف PDF. حاولي مرة أخرى.'
+          );
+
+          console.error(error);
+
+        } finally {
+          document.body.removeChild(cloned);
+
+          deleteCols.forEach(col => col.style.display = '');
+
+          downloadBtn.style.display = 'inline-block';
+        }
+      });
+    }
+
+
+
+  </script>
+
+</body>
+
+</html>
