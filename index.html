@@ -538,13 +538,17 @@
         <form id="visitForm" novalidate>
           <div class="row g-3">
             <div class="col-md-6">
+              <label class="form-label">الاسم <span class="required-star">*</span></label>
+              <input type="text" id="familyNames" class="form-control" required>
+            </div>
+            <div class="col-md-6">
               <label class="form-label">اليوم <span class="required-star">*</span></label>
               <input type="date" id="visitDate" class="form-control" required>
             </div>
             <div class="col-md-6">
-              <label class="form-label">نوع الخدمة <span class="required-star">*</span></label>
+              <label class="form-label"> الخدمة <span class="required-star">*</span></label>
               <select id="serviceType" class="form-select mb-2" required>
-                <option value="" disabled selected>اختر نوع الخدمة</option>
+                <option value="" disabled selected>اختر الخدمة</option>
                 <option value="اعدادى">اعدادى</option>
                 <option value="ثانوى">ثانوى</option>
                 <option value="أخرى">أخرى</option>
@@ -556,18 +560,18 @@
 
 
             </div>
-            <div class="col-md-6">
-              <label class="form-label">الاسم <span class="required-star">*</span></label>
-              <input type="text" id="familyNames" class="form-control" required>
-            </div>
-            <div class="col-md-6">
-              <label class="form-label">رقم التليفون <span class="required-star">*</span></label>
-              <input type="tel" id="phoneNumber" class="form-control" pattern="^[0-9]{11}$" maxlength="11"
-                oninput="this.value = this.value.replace(/[^0-9]/g, '')" required style="text-align: right;">
-            </div>
-            <div class="col-md-12">
-              <label class="form-label">العنوان <span class="required-star">*</span></label>
-              <input type="text" id="address" class="form-control" required>
+
+            <div class="col-md-6 d-none" id="gradeContainer">
+              <label class="form-label">
+                الفرقة <span class="required-star">*</span>
+              </label>
+
+              <select id="grade" class="form-select">
+                <option value="" disabled selected>اختاري الفرقة</option>
+                <option value="أولى">أولى</option>
+                <option value="تانية">تانية</option>
+                <option value="تالتة">تالتة</option>
+              </select>
             </div>
             <div class="col-md-12">
               <label class="form-label">ملاحظات </label>
@@ -612,12 +616,11 @@
             <thead class="table-light">
               <tr>
                 <th>اليوم</th>
-                <th>نوع الخدمة</th>
                 <th>الاسم</th>
-                <th>رقم التليفون</th>
-                <th>العنوان</th>
+                <th> الخدمة</th>
+                <th>الفرقة</th>
                 <th>ملاحظات</th>
-                <th class="no-print">حذف</th> <!-- نسيبه كده، الكلاس no-print هو اللي هيخفيه -->
+                <th class="no-print">حذف</th>
               </tr>
             </thead>
             <tbody id="reportBody"></tbody>
@@ -723,6 +726,10 @@
       const serviceType = document.getElementById('serviceType');
       const filterServiceType = document.getElementById('filterServiceType');
       const otherServiceInput = document.getElementById('otherServiceInput');
+
+
+      const gradeContainer = document.getElementById('gradeContainer');
+      const gradeInput = document.getElementById('grade');
 
       const visitsCollection = collection(db, "visits");
 
@@ -830,7 +837,7 @@
         if (filtered.length === 0) {
           reportBody.innerHTML = `
       <tr>
-        <td colspan="7" class="text-center text-muted py-4">
+        <td colspan="6" class="text-center text-muted py-4">
           لا توجد زيارات مطابقة للبحث
         </td>
       </tr>
@@ -845,22 +852,22 @@
           const row = document.createElement('tr');
 
           row.innerHTML = `
-      <td>${visit.date || ''}</td>
-      <td>${visit.serviceType || ''}</td>
-      <td>${visit.familyNames || ''}</td>
-      <td>${visit.phoneNumber || ''}</td>
-      <td>${visit.address || ''}</td>
-      <td>${visit.notes || ''}</td>
+  <td>${visit.date || ''}</td>
+    <td>${visit.familyNames || ''}</td>
 
-      <td class="no-print text-center">
-        <span
-          class="delete-icon"
-          onclick="deleteSingleVisit('${visit.id}')"
-          title="حذف الزيارة">
-          🗑️
-        </span>
-      </td>
-    `;
+  <td>${visit.serviceType || ''}</td>
+  <td>${visit.grade || ''}</td>
+  <td>${visit.notes || ''}</td>
+
+  <td class="no-print text-center">
+    <span
+      class="delete-icon"
+      onclick="deleteSingleVisit('${visit.id}')"
+      title="حذف الزيارة">
+      🗑️
+    </span>
+  </td>
+`;
 
           reportBody.appendChild(row);
         });
@@ -992,6 +999,21 @@
       // نوع الخدمة (أخرى)
       // =========================
       serviceType.addEventListener('change', () => {
+
+        // إظهار حقل الفرقة للإعدادي والثانوي فقط
+        if (
+          serviceType.value === 'اعدادى' ||
+          serviceType.value === 'ثانوى'
+        ) {
+          gradeContainer.classList.remove('d-none');
+          gradeInput.required = true;
+        } else {
+          gradeContainer.classList.add('d-none');
+          gradeInput.required = false;
+          gradeInput.value = '';
+        }
+
+        // التعامل مع نوع الخدمة الأخرى
         if (serviceType.value === 'أخرى') {
           otherServiceInput.classList.remove('d-none');
           otherServiceInput.required = true;
@@ -1003,7 +1025,6 @@
 
         updateAddButton();
       });
-
       // =========================
       // إضافة زيارة جديدة
       // =========================
@@ -1023,10 +1044,10 @@
 
         const visit = {
           date: document.getElementById('visitDate').value,
-          serviceType: selectedService,
           familyNames: document.getElementById('familyNames').value,
-          phoneNumber: document.getElementById('phoneNumber').value,
-          address: document.getElementById('address').value,
+
+          serviceType: selectedService,
+          grade: gradeInput.value,
           notes: document.getElementById('notes').value,
           createdAt: serverTimestamp()
         };
