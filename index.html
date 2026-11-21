@@ -600,13 +600,22 @@
         </div>
 
         <!-- فلتر نوع الخدمة داخل التقرير -->
-        <div class="row mb-3 align-items-center">
+        <!-- فلاتر داخل التقرير -->
+        <div class="row g-2 mb-3 align-items-center">
           <div class="col-md-4">
             <select id="filterServiceType" class="form-select">
               <option value="all">كل الخدمات</option>
               <option value="اعدادى">اعدادى</option>
               <option value="ثانوى">ثانوى</option>
               <option value="other">أخرى</option>
+            </select>
+          </div>
+          <div class="col-md-4">
+            <select id="filterGrade" class="form-select">
+              <option value="all">كل الفرق</option>
+              <option value="أولى">أولى</option>
+              <option value="تانية">تانية</option>
+              <option value="تالتة">تالتة</option>
             </select>
           </div>
         </div>
@@ -725,6 +734,7 @@
 
       const serviceType = document.getElementById('serviceType');
       const filterServiceType = document.getElementById('filterServiceType');
+      const filterGrade = document.getElementById('filterGrade');
       const otherServiceInput = document.getElementById('otherServiceInput');
 
 
@@ -806,8 +816,7 @@
       // =========================
       // عرض الزيارات
       // =========================
-      function loadVisits(start = null, end = null, selectedFilter = 'all') {
-
+      function loadVisits(start = null, end = null, selectedFilter = 'all', selectedGrade = filterGrade.value) {
         let filtered = [...visitsData];
 
         if (start && end) {
@@ -826,6 +835,10 @@
 
             return service === selectedFilter;
           });
+        }
+
+        if (selectedGrade !== 'all') {
+          filtered = filtered.filter(visit => (visit.grade || '') === selectedGrade);
         }
 
         filtered.sort((a, b) =>
@@ -886,6 +899,14 @@
           filterServiceType.value
         );
 
+      });
+
+      filterGrade.addEventListener('change', () => {
+        loadVisits(
+          weekStartInput.value,
+          weekEndInput.value,
+          filterServiceType.value
+        );
       });
 
       onSnapshot(visitsCollection, (snapshot) => {
@@ -1109,14 +1130,14 @@
           weekInfo.classList.add('d-none');
           weekStartInput.value = '';
           weekEndInput.value = '';
-          filterServiceType.value = 'all';
+          filterServiceType.value = 'all'; filterGrade.value = 'all';
           toggleReportBtn.textContent = 'عرض التقرير';
         } else {
           if (!start || !end) {
             showPopup(
               'warning',
               'تنبيه',
-              'من فضلك اختاري تاريخ البداية وتاريخ النهاية أولاً.'
+              'من فضلك اختر تاريخ البداية وتاريخ النهاية أولاً.'
             );
             return;
           }
@@ -1179,12 +1200,21 @@
     </div>
 `;
 
+        const originalGrade = document.getElementById('filterGrade');
+        const clonedGrade = cloned.querySelector('#filterGrade');
+        const selectedGradeOption = originalGrade.options[originalGrade.selectedIndex];
+
+        clonedGrade.outerHTML = `
+  <div class="form-control bg-white">
+    ${selectedGradeOption.textContent}
+  </div>
+`;
+
         cloned.style.width = '794px';
         cloned.style.position = 'absolute';
         cloned.style.left = '-9999px';
 
         document.body.appendChild(cloned);
-
         try {
           const canvas = await html2canvas(cloned, {
             scale: 2,
@@ -1192,18 +1222,49 @@
             windowWidth: 794
           });
 
-          const imgData = canvas.toDataURL('image/png');
-
           const { jsPDF } = window.jspdf;
           const pdf = new jsPDF('p', 'mm', 'a4');
 
-          const pageWidth = pdf.internal.pageSize.getWidth();
-          const imgProps = pdf.getImageProperties(imgData);
+          const pageWidth = pdf.internal.pageSize.getWidth();    // 210
+          const pageHeight = pdf.internal.pageSize.getHeight();  // 297
+          const margin = 10;
 
-          const pdfWidth = pageWidth - 20;
-          const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
+          const pdfWidth = pageWidth - margin * 2;               // عرض المحتوى
+          const usableHeight = pageHeight - margin * 2;          // ارتفاع المحتوى في كل صفحة
 
-          pdf.addImage(imgData, 'PNG', 10, 10, pdfWidth, pdfHeight);
+          // نسبة التحويل من بكسل الكانفاس إلى ملم
+          const pxPerMm = canvas.width / pdfWidth;
+          const pageHeightPx = Math.floor(usableHeight * pxPerMm);
+
+          let renderedPx = 0;
+          let pageIndex = 0;
+
+          while (renderedPx < canvas.height) {
+            const sliceHeightPx = Math.min(pageHeightPx, canvas.height - renderedPx);
+
+            // كانفاس مؤقت لكل صفحة
+            const pageCanvas = document.createElement('canvas');
+            pageCanvas.width = canvas.width;
+            pageCanvas.height = sliceHeightPx;
+
+            const ctx = pageCanvas.getContext('2d');
+            ctx.fillStyle = '#ffffff';
+            ctx.fillRect(0, 0, pageCanvas.width, pageCanvas.height);
+            ctx.drawImage(
+              canvas,
+              0, renderedPx, canvas.width, sliceHeightPx,   // الجزء المقصوص من الأصل
+              0, 0, canvas.width, sliceHeightPx             // مكانه في الصفحة
+            );
+
+            const imgData = pageCanvas.toDataURL('image/png');
+            const sliceHeightMm = sliceHeightPx / pxPerMm;
+
+            if (pageIndex > 0) pdf.addPage();
+            pdf.addImage(imgData, 'PNG', margin, margin, pdfWidth, sliceHeightMm);
+
+            renderedPx += sliceHeightPx;
+            pageIndex++;
+          }
 
           pdf.save('تقرير_الزيارات.pdf');
 
