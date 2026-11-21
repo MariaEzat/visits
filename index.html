@@ -545,6 +545,10 @@
               <label class="form-label">اليوم <span class="required-star">*</span></label>
               <input type="date" id="visitDate" class="form-control" required>
             </div>
+            <div class="col-md-12">
+              <label class="form-label">العنوان</label>
+              <input type="text" id="address" class="form-control" placeholder=" العنوان ">
+            </div>
             <div class="col-md-6">
               <label class="form-label"> الخدمة <span class="required-star">*</span></label>
               <select id="serviceType" class="form-select mb-2" required>
@@ -628,6 +632,7 @@
                 <th>الاسم</th>
                 <th> الخدمة</th>
                 <th>الفرقة</th>
+                <th>العنوان</th>
                 <th>ملاحظات</th>
                 <th class="no-print">حذف</th>
               </tr>
@@ -850,7 +855,7 @@
         if (filtered.length === 0) {
           reportBody.innerHTML = `
       <tr>
-        <td colspan="6" class="text-center text-muted py-4">
+        <td colspan="7" class="text-center text-muted py-4">
           لا توجد زيارات مطابقة للبحث
         </td>
       </tr>
@@ -867,9 +872,9 @@
           row.innerHTML = `
   <td>${visit.date || ''}</td>
     <td>${visit.familyNames || ''}</td>
-
   <td>${visit.serviceType || ''}</td>
   <td>${visit.grade || ''}</td>
+  <td>${visit.address || ''}</td>
   <td>${visit.notes || ''}</td>
 
   <td class="no-print text-center">
@@ -1066,9 +1071,9 @@
         const visit = {
           date: document.getElementById('visitDate').value,
           familyNames: document.getElementById('familyNames').value,
-
           serviceType: selectedService,
           grade: gradeInput.value,
+          address: document.getElementById('address').value.trim(),
           notes: document.getElementById('notes').value,
           createdAt: serverTimestamp()
         };
