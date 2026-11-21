@@ -291,9 +291,26 @@
     }
 
     #reportTable {
-      min-width: 760px;
+      min-width: 900px;
       margin-bottom: 0;
       vertical-align: middle;
+    }
+
+    #reportTable th:nth-child(1),
+    #reportTable td:nth-child(1) {
+      width: 45px;
+      text-align: center;
+    }
+
+    #reportTable th:nth-child(2),
+    #reportTable td:nth-child(2) {
+      width: 105px;
+      white-space: nowrap;
+    }
+
+    #reportTable.hide-grade th:nth-child(5),
+    #reportTable.hide-grade td:nth-child(5) {
+      display: none;
     }
 
     #reportTable thead th {
@@ -614,7 +631,7 @@
               <option value="other">أخرى</option>
             </select>
           </div>
-          <div class="col-md-4">
+          <div class="col-md-4" id="gradeFilterCol">
             <select id="filterGrade" class="form-select">
               <option value="all">كل الفرق</option>
               <option value="أولى">أولى</option>
@@ -628,6 +645,7 @@
           <table class="table table-bordered table-striped" id="reportTable">
             <thead class="table-light">
               <tr>
+                <th style="width:50px;">م</th>
                 <th>اليوم</th>
                 <th>الاسم</th>
                 <th> الخدمة</th>
@@ -745,7 +763,18 @@
 
       const gradeContainer = document.getElementById('gradeContainer');
       const gradeInput = document.getElementById('grade');
+      const gradeFilterCol = document.getElementById('gradeFilterCol');
+      const reportTable = document.getElementById('reportTable');
 
+      function updateGradeVisibility() {
+        const isOther = filterServiceType.value === 'other';
+
+        gradeFilterCol.classList.toggle('d-none', isOther);
+        reportTable.classList.toggle('hide-grade', isOther);
+
+        // نرجّع فلتر الفرقة للوضع الافتراضي عشان ما يفلترش على قيمة مخفية
+        if (isOther) filterGrade.value = 'all';
+      }
       const visitsCollection = collection(db, "visits");
 
       let visitsData = [];
@@ -855,7 +884,7 @@
         if (filtered.length === 0) {
           reportBody.innerHTML = `
       <tr>
-        <td colspan="7" class="text-center text-muted py-4">
+        <td colspan="8" class="text-center text-muted py-4">
           لا توجد زيارات مطابقة للبحث
         </td>
       </tr>
@@ -865,11 +894,12 @@
           return;
         }
 
-        filtered.forEach(visit => {
+        filtered.forEach((visit, index) => {
 
           const row = document.createElement('tr');
 
           row.innerHTML = `
+            <td class="text-center fw-bold">${index + 1}</td>
   <td>${visit.date || ''}</td>
     <td>${visit.familyNames || ''}</td>
   <td>${visit.serviceType || ''}</td>
@@ -897,6 +927,7 @@
 
 
       filterServiceType.addEventListener('change', () => {
+        updateGradeVisibility();
 
         loadVisits(
           weekStartInput.value,
@@ -1136,6 +1167,7 @@
           weekStartInput.value = '';
           weekEndInput.value = '';
           filterServiceType.value = 'all'; filterGrade.value = 'all';
+          updateGradeVisibility();
           toggleReportBtn.textContent = 'عرض التقرير';
         } else {
           if (!start || !end) {
@@ -1215,16 +1247,34 @@
   </div>
 `;
 
-        cloned.style.width = '794px';
+        cloned.style.width = '1000px';
         cloned.style.position = 'absolute';
         cloned.style.left = '-9999px';
-
+        // تكبير الخط داخل الـ PDF
+        const pdfStyle = document.createElement('style');
+        pdfStyle.textContent = `
+  #reportTable thead th {
+    font-size: 1.15rem !important;
+    padding: 14px 12px !important;
+  }
+  #reportTable tbody td {
+    font-size: 1rem !important;
+    padding: 13px 12px !important;
+  }
+  .card-title {
+    font-size: 1.5rem !important;
+  }
+  .form-control {
+    font-size: 1.1rem !important;
+  }
+`;
+        cloned.appendChild(pdfStyle);
         document.body.appendChild(cloned);
         try {
           const canvas = await html2canvas(cloned, {
             scale: 2,
             useCORS: true,
-            windowWidth: 794
+            windowWidth: 1000
           });
 
           const { jsPDF } = window.jspdf;
